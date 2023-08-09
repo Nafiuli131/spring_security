@@ -24,13 +24,13 @@ public class JwtUtil {
         Date now = new Date();
         Date expiryDate = new Date(now.getTime() + jwtExpirationMillis);
 
-        SecretKey key = Keys.hmacShaKeyFor(jwtSecret.getBytes());
+        SecretKey key = Keys.secretKeyFor(SignatureAlgorithm.HS256);
 
         return Jwts.builder()
                 .setSubject(username)
                 .setIssuedAt(now)
                 .setExpiration(expiryDate)
-                .signWith(key, SignatureAlgorithm.HS512)
+                .signWith(key, SignatureAlgorithm.HS256)
                 .compact();
     }
 
