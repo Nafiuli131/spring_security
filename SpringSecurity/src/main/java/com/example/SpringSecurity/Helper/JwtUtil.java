@@ -2,11 +2,11 @@ package com.example.SpringSecurity.Helper;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
-import io.jsonwebtoken.security.Keys;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import javax.crypto.SecretKey;
+import javax.crypto.spec.SecretKeySpec;
 import java.util.Date;
 //methods - for generating token
 //validate
@@ -24,7 +24,8 @@ public class JwtUtil {
         Date now = new Date();
         Date expiryDate = new Date(now.getTime() + jwtExpirationMillis);
 
-        SecretKey key = Keys.secretKeyFor(SignatureAlgorithm.HS256);
+        byte[] encodedKey = jwtSecret.getBytes();
+        SecretKey key = new SecretKeySpec(encodedKey, 0, encodedKey.length, "HmacSHA256");
 
         return Jwts.builder()
                 .setSubject(username)
@@ -34,7 +35,7 @@ public class JwtUtil {
                 .compact();
     }
 
-    public boolean validateToken(String token) {
+    public boolean validateToken(String token, String username) {
         try {
             Jwts.parserBuilder()
                     .setSigningKey(jwtSecret.getBytes())

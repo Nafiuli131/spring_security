@@ -10,4 +10,9 @@ public class Home {
     public String welcome(){
         return "Welcome home";
     }
+
+    @RequestMapping("/test")
+    public String test(){
+        return "test api for all";
+    }
 }
